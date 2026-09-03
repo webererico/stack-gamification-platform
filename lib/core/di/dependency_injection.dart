@@ -18,6 +18,7 @@ import 'package:stack_gamification_platform/features/squad/data/squad_repository
 import 'package:stack_gamification_platform/features/squad/domain/repository/squad_repository.dart';
 import 'package:stack_gamification_platform/features/squad/state_management/cubit/squad_select_cubit.dart';
 import 'package:stack_gamification_platform/features/team/state_management/cubit/team_cubit.dart';
+import 'package:stack_gamification_platform/features/team_builder/state_management/cubit/team_builder_cubit.dart';
 import 'package:stack_gamification_platform/features/user/data/user_repository_impl.dart';
 import 'package:stack_gamification_platform/features/user/domain/repository/user_repository.dart';
 import 'package:stack_gamification_platform/firebase_options.dart';
@@ -61,7 +62,7 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<AuthGate>(() => AuthGate(getIt(), getIt()));
 
   // SIGN IN / SIGN UP
-  getIt.registerFactory<SignInCubit>(() => SignInCubit(getIt()));
+  getIt.registerFactory<SignInCubit>(() => SignInCubit(getIt(), getIt()));
   getIt.registerFactory<SignUpCubit>(() => SignUpCubit(getIt(), getIt()));
 
   // SQUAD SELECT
@@ -76,6 +77,11 @@ Future<void> configureDependencies() async {
 
   // TEAM
   getIt.registerFactory<TeamCubit>(() => TeamCubit(getIt(), getIt()));
+
+  // TEAM BUILDER
+  getIt.registerFactory<TeamBuilderCubit>(
+    () => TeamBuilderCubit(getIt(), getIt(), getIt()),
+  );
 
   // PROFILE
   getIt.registerFactory<ProfileCubit>(

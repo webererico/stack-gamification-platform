@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stack_gamification_platform/core/gamification/level_calculator.dart';
+import 'package:stack_gamification_platform/core/gamification/skill_questions.dart';
 
 void main() {
   group('LevelCalculator', () {
@@ -36,6 +37,49 @@ void main() {
       expect(SkillTierX.fromRating(7), SkillTier.avancado);
       expect(SkillTierX.fromRating(9), SkillTier.expert);
       expect(SkillTierX.fromRating(10), SkillTier.expert);
+    });
+  });
+
+  group('SkillAssessment.computeRating', () {
+    test('scores 0 when every question is "não sei"', () {
+      final answers = {
+        for (final q in SkillAssessment.questions) q.id: SkillAnswer.unknown,
+      };
+      expect(
+        SkillAssessment.computeRating(answers: answers, projectsCount: 0),
+        0,
+      );
+    });
+
+    test('"não" scores the same as "não sei": nothing', () {
+      final answers = {
+        for (final q in SkillAssessment.questions) q.id: SkillAnswer.no,
+      };
+      expect(
+        SkillAssessment.computeRating(answers: answers, projectsCount: 10),
+        2, // only the projects bonus point scores.
+      );
+    });
+
+    test('reaching 10/10 requires every "sim" AND more than the threshold '
+        'of projects', () {
+      final allYes = {
+        for (final q in SkillAssessment.questions) q.id: SkillAnswer.yes,
+      };
+      expect(
+        SkillAssessment.computeRating(
+          answers: allYes,
+          projectsCount: SkillAssessment.projectsThreshold,
+        ),
+        8, // all yes, but not yet over the projects threshold.
+      );
+      expect(
+        SkillAssessment.computeRating(
+          answers: allYes,
+          projectsCount: SkillAssessment.projectsThreshold + 1,
+        ),
+        10,
+      );
     });
   });
 }

@@ -4,7 +4,7 @@ import 'package:stack_gamification_platform/core/di/dependency_injection.dart';
 import 'package:stack_gamification_platform/core/theme/app_style.dart';
 import 'package:stack_gamification_platform/core/theme/spaces.dart';
 import 'package:stack_gamification_platform/design_system/gamification/level_badge.dart';
-import 'package:stack_gamification_platform/design_system/gamification/rate_skill_sheet.dart';
+import 'package:stack_gamification_platform/design_system/gamification/skill_questionnaire_sheet.dart';
 import 'package:stack_gamification_platform/design_system/gamification/skill_xp_bar.dart';
 import 'package:stack_gamification_platform/design_system/gamification/xp_summary_card.dart';
 import 'package:stack_gamification_platform/design_system/loader/app_loader.dart';
@@ -27,13 +27,16 @@ class DashboardPage extends StatelessWidget {
                 final cubit = context.read<DashboardCubit>();
                 final name = await showAddCustomSkillDialog(context);
                 if (name == null || !context.mounted) return;
-                final rating = await showRateSkillSheet(
+                final result = await showSkillQuestionnaireSheet(
                   context,
                   skillName: name,
-                  initialRating: 0,
                 );
-                if (rating != null) {
-                  cubit.addCustomSkill(name: name, rating: rating);
+                if (result != null) {
+                  cubit.addCustomSkill(
+                    name: name,
+                    answers: result.answers,
+                    projectsCount: result.projectsCount,
+                  );
                 }
               },
               icon: const Icon(Icons.add),
@@ -57,12 +60,14 @@ class DashboardPage extends StatelessWidget {
                     name: user.name,
                     totalXp: user.totalXp,
                     subtitle: '${user.squadName ?? ''} · ${user.stack ?? ''}',
+                    photoUrl: user.photoUrl,
                   ),
                   AppSpaces.vertical24,
                   Text('Suas skills', style: AppStyle.heading16),
                   AppSpaces.vertical8,
                   Text(
-                    'Toque em uma skill para se autoavaliar de 0 a 10.',
+                    'Toque em uma skill e responda as perguntas-chave para '
+                    'se autoavaliar.',
                     style: AppStyle.body14,
                   ),
                   AppSpaces.vertical12,
@@ -79,16 +84,19 @@ class DashboardPage extends StatelessWidget {
                                   ? SkillTierChip(tier: skill.tier)
                                   : null,
                               onTap: () async {
-                                final rating = await showRateSkillSheet(
-                                  context,
-                                  skillName: skill.name,
-                                  initialRating: skill.rating,
-                                );
-                                if (rating != null) {
-                                  cubit.rateSkill(
+                                final result =
+                                    await showSkillQuestionnaireSheet(
+                                      context,
+                                      skillName: skill.name,
+                                      initialAnswers: skill.answers,
+                                      initialProjectsCount: skill.projectsCount,
+                                    );
+                                if (result != null) {
+                                  cubit.assessSkill(
                                     skillId: skill.skillId,
                                     name: skill.name,
-                                    rating: rating,
+                                    answers: result.answers,
+                                    projectsCount: result.projectsCount,
                                   );
                                 }
                               },

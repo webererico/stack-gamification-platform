@@ -13,10 +13,12 @@ import 'package:stack_gamification_platform/features/profile/presentation/pages/
 import 'package:stack_gamification_platform/features/squad/presentation/pages/squad_select_page.dart';
 import 'package:stack_gamification_platform/features/team/presentation/pages/member_detail_page.dart';
 import 'package:stack_gamification_platform/features/team/presentation/pages/team_page.dart';
+import 'package:stack_gamification_platform/features/team_builder/presentation/pages/team_builder_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _dashboardNavigatorKey = GlobalKey<NavigatorState>();
 final _teamNavigatorKey = GlobalKey<NavigatorState>();
+final _teamBuilderNavigatorKey = GlobalKey<NavigatorState>();
 final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter router = GoRouter(
@@ -80,6 +82,16 @@ final GoRouter router = GoRouter(
               path: AppRoutes.team,
               name: RouteNames.team,
               builder: (_, _) => const TeamPage(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _teamBuilderNavigatorKey,
+          routes: [
+            GoRoute(
+              path: AppRoutes.teamBuilder,
+              name: RouteNames.teamBuilder,
+              builder: (_, _) => const TeamBuilderPage(),
             ),
           ],
         ),

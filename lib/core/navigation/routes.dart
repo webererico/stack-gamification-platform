@@ -6,6 +6,7 @@ class AppRoutes {
   static const dashboard = '/dashboard';
   static const team = '/team';
   static const teamMemberDetail = '/team/:memberId';
+  static const teamBuilder = '/team-builder';
   static const profile = '/profile';
 }
 
@@ -17,5 +18,6 @@ class RouteNames {
   static const dashboard = 'Dashboard';
   static const team = 'Team';
   static const teamMemberDetail = 'Team Member Detail';
+  static const teamBuilder = 'Team Builder';
   static const profile = 'Profile';
 }

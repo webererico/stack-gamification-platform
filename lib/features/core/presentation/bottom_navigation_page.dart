@@ -26,6 +26,11 @@ class BottomNavigationPage extends StatelessWidget {
             label: 'Squad',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.groups_2_outlined),
+            activeIcon: Icon(Icons.groups_2_rounded),
+            label: 'Monte o Time',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_outline_rounded),
             activeIcon: Icon(Icons.person_rounded),
             label: 'Perfil',

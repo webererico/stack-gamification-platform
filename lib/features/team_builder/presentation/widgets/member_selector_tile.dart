@@ -1,28 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:stack_gamification_platform/core/theme/app_colors.dart';
 import 'package:stack_gamification_platform/core/theme/app_style.dart';
 import 'package:stack_gamification_platform/core/theme/spaces.dart';
 import 'package:stack_gamification_platform/design_system/gamification/level_badge.dart';
 import 'package:stack_gamification_platform/design_system/gamification/user_avatar.dart';
 import 'package:stack_gamification_platform/features/user/domain/model/app_user.dart';
 
-class TeamMemberTile extends StatelessWidget {
-  const TeamMemberTile({
+class MemberSelectorTile extends StatelessWidget {
+  const MemberSelectorTile({
     required this.member,
-    required this.rank,
+    required this.selected,
     required this.onTap,
-    this.isCurrentUser = false,
+    this.color,
     super.key,
   });
 
   final AppUser member;
-  final int rank;
-  final bool isCurrentUser;
+  final bool selected;
+  final Color? color;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
+      color: selected
+          ? (color ?? AppColors.primaryColor).withValues(alpha: 0.08)
+          : null,
+      shape: RoundedRectangleBorder(
+        borderRadius: AppBorder.radius16,
+        side: BorderSide(
+          color: selected
+              ? (color ?? AppColors.primaryColor)
+              : Colors.transparent,
+          width: 1.5,
+        ),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: AppBorder.radius16,
@@ -30,7 +43,7 @@ class TeamMemberTile extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              _RankBadge(rank: rank),
+              _SelectionMarker(selected: selected, color: color),
               AppSpaces.horizontal12,
               UserAvatar(name: member.name, photoUrl: member.photoUrl),
               AppSpaces.horizontal12,
@@ -38,21 +51,7 @@ class TeamMemberTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            member.name,
-                            style: AppStyle.title14,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (isCurrentUser) ...[
-                          AppSpaces.horizontal8,
-                          Text('(você)', style: AppStyle.subtitle12),
-                        ],
-                      ],
-                    ),
+                    Text(member.name, style: AppStyle.title14),
                     Text('${member.totalXp} XP', style: AppStyle.subtitle12),
                   ],
                 ),
@@ -66,28 +65,30 @@ class TeamMemberTile extends StatelessWidget {
   }
 }
 
-class _RankBadge extends StatelessWidget {
-  const _RankBadge({required this.rank});
+class _SelectionMarker extends StatelessWidget {
+  const _SelectionMarker({required this.selected, this.color});
 
-  final int rank;
+  final bool selected;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final medal = switch (rank) {
-      1 => '🥇',
-      2 => '🥈',
-      3 => '🥉',
-      _ => null,
-    };
-    return SizedBox(
-      width: 28,
-      child: medal != null
-          ? Text(medal, style: const TextStyle(fontSize: 20))
-          : Text(
-              '$rank',
-              textAlign: TextAlign.center,
-              style: AppStyle.subtitle12,
-            ),
+    return Container(
+      width: 22,
+      height: 22,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: selected ? (color ?? AppColors.primaryColor) : null,
+        border: Border.all(
+          color: selected
+              ? (color ?? AppColors.primaryColor)
+              : AppColors.xpTrackColor,
+          width: 1.5,
+        ),
+      ),
+      child: selected
+          ? const Icon(Icons.check, size: 14, color: Colors.white)
+          : null,
     );
   }
 }

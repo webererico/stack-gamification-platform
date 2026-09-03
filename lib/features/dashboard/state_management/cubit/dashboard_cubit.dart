@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stack_gamification_platform/core/gamification/level_calculator.dart';
 import 'package:stack_gamification_platform/core/gamification/skill_catalog.dart';
 import 'package:stack_gamification_platform/core/gamification/skill_id.dart';
+import 'package:stack_gamification_platform/core/gamification/skill_questions.dart';
 import 'package:stack_gamification_platform/features/authentication/domain/repository/auth_repository.dart';
 import 'package:stack_gamification_platform/features/skills/domain/model/skill_rating.dart';
 import 'package:stack_gamification_platform/features/skills/domain/repository/skill_repository.dart';
@@ -55,28 +56,45 @@ class DashboardCubit extends Cubit<DashboardState> {
     return result;
   }
 
-  Future<void> rateSkill({
+  Future<void> assessSkill({
     required String skillId,
     required String name,
-    required int rating,
+    required Map<String, SkillAnswer> answers,
+    required int projectsCount,
   }) async {
-    await _skillRepository.upsertRating(
+    await _skillRepository.upsertAssessment(
       uid: _uid,
       skillId: skillId,
       name: name,
-      rating: rating,
+      answers: answers,
+      projectsCount: projectsCount,
+    );
+    final rating = SkillAssessment.computeRating(
+      answers: answers,
+      projectsCount: projectsCount,
     );
     final merged = {for (final s in displaySkills) s.skillId: s};
-    merged[skillId] = SkillRating(skillId: skillId, name: name, rating: rating);
+    merged[skillId] = SkillRating(
+      skillId: skillId,
+      name: name,
+      rating: rating,
+      answers: answers,
+      projectsCount: projectsCount,
+    );
     final totalXp = LevelCalculator.totalXp(merged.values.map((s) => s.rating));
     await _userRepository.updateAggregateXp(uid: _uid, totalXp: totalXp);
   }
 
-  Future<void> addCustomSkill({required String name, required int rating}) {
-    return rateSkill(
+  Future<void> addCustomSkill({
+    required String name,
+    required Map<String, SkillAnswer> answers,
+    required int projectsCount,
+  }) {
+    return assessSkill(
       skillId: SkillId.fromName(name),
       name: name,
-      rating: rating,
+      answers: answers,
+      projectsCount: projectsCount,
     );
   }
 

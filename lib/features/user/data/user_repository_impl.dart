@@ -54,6 +54,37 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
+  Future<void> upsertGoogleProfile({
+    required String uid,
+    required String name,
+    required String email,
+    required String? photoUrl,
+    required bool isNewUser,
+  }) async {
+    try {
+      if (isNewUser) {
+        await _users
+            .doc(uid)
+            .set(
+              AppUser(
+                uid: uid,
+                name: name,
+                email: email,
+                photoUrl: photoUrl,
+              ).toMap(),
+            );
+      } else {
+        await _users.doc(uid).set({
+          'email': email,
+          'photoUrl': photoUrl,
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      _errorHandler.handle(e);
+    }
+  }
+
+  @override
   Future<void> updateName({required String uid, required String name}) async {
     try {
       await _users.doc(uid).update({'name': name});

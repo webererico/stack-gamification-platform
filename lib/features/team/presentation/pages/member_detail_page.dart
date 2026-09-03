@@ -44,6 +44,7 @@ class MemberDetailPage extends StatelessWidget {
                       name: user.name,
                       totalXp: user.totalXp,
                       subtitle: '${user.squadName ?? ''} · ${user.stack ?? ''}',
+                      photoUrl: user.photoUrl,
                     ),
                     AppSpaces.vertical24,
                     if (rated.length >= 3) ...[

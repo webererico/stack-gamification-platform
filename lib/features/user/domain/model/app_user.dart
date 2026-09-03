@@ -5,6 +5,7 @@ class AppUser {
   final String uid;
   final String name;
   final String email;
+  final String? photoUrl;
   final String? squadId;
   final String? squadName;
   final String? stack;
@@ -15,6 +16,7 @@ class AppUser {
     required this.uid,
     required this.name,
     required this.email,
+    this.photoUrl,
     this.squadId,
     this.squadName,
     this.stack,
@@ -27,6 +29,7 @@ class AppUser {
 
   AppUser copyWith({
     String? name,
+    String? photoUrl,
     String? squadId,
     String? squadName,
     String? stack,
@@ -36,6 +39,7 @@ class AppUser {
       uid: uid,
       name: name ?? this.name,
       email: email,
+      photoUrl: photoUrl ?? this.photoUrl,
       squadId: squadId ?? this.squadId,
       squadName: squadName ?? this.squadName,
       stack: stack ?? this.stack,
@@ -48,6 +52,7 @@ class AppUser {
     return {
       'name': name,
       'email': email,
+      'photoUrl': photoUrl,
       'squadId': squadId,
       'squadName': squadName,
       'stack': stack,
@@ -62,6 +67,7 @@ class AppUser {
       uid: uid,
       name: map['name'] as String? ?? '',
       email: map['email'] as String? ?? '',
+      photoUrl: map['photoUrl'] as String?,
       squadId: map['squadId'] as String?,
       squadName: map['squadName'] as String?,
       stack: map['stack'] as String?,

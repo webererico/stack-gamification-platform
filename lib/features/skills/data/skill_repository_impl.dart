@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stack_gamification_platform/core/gamification/skill_questions.dart';
 import 'package:stack_gamification_platform/core/response_handler/error_handler.dart';
 import 'package:stack_gamification_platform/features/skills/domain/model/skill_rating.dart';
 import 'package:stack_gamification_platform/features/skills/domain/repository/skill_repository.dart';
@@ -25,17 +26,28 @@ class SkillRepositoryImpl implements SkillRepository {
   }
 
   @override
-  Future<void> upsertRating({
+  Future<void> upsertAssessment({
     required String uid,
     required String skillId,
     required String name,
-    required int rating,
+    required Map<String, SkillAnswer> answers,
+    required int projectsCount,
   }) async {
     try {
+      final rating = SkillAssessment.computeRating(
+        answers: answers,
+        projectsCount: projectsCount,
+      );
       await _skillsOf(uid)
           .doc(skillId)
           .set(
-            SkillRating(skillId: skillId, name: name, rating: rating).toMap(),
+            SkillRating(
+              skillId: skillId,
+              name: name,
+              rating: rating,
+              answers: answers,
+              projectsCount: projectsCount,
+            ).toMap(),
           );
     } catch (e) {
       _errorHandler.handle(e);
