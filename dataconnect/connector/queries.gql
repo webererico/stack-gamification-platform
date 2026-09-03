@@ -2,7 +2,11 @@
 # rating — that transparency is the whole point of the platform (mirrors
 # `firestore.rules`' `allow read: if isSignedIn()`).
 
-query GetUser($id: String!) @auth(level: USER) {
+query GetUser($id: String!)
+  @auth(
+    level: USER
+    insecureReason: "Any signed-in developer can read any profile — the whole point of the platform is squad-wide visibility into who knows what."
+  ) {
   user(id: $id) {
     id
     name
@@ -19,7 +23,11 @@ query GetUser($id: String!) @auth(level: USER) {
   }
 }
 
-query ListSquadMembers($squadId: UUID!) @auth(level: USER) {
+query ListSquadMembers($squadId: UUID!)
+  @auth(
+    level: USER
+    insecureReason: "Squad rosters are visible to any signed-in developer, not just members of that squad."
+  ) {
   users(where: { squad: { id: { eq: $squadId } } }, orderBy: { totalXp: DESC }) {
     id
     name
@@ -29,7 +37,11 @@ query ListSquadMembers($squadId: UUID!) @auth(level: USER) {
   }
 }
 
-query ListSquads @auth(level: USER) {
+query ListSquads
+  @auth(
+    level: USER
+    insecureReason: "The squad directory is visible to any signed-in developer so they can find one to join."
+  ) {
   squads(orderBy: { name: ASC }) {
     id
     name
@@ -38,7 +50,11 @@ query ListSquads @auth(level: USER) {
   }
 }
 
-query ListSkillRatings($userId: String!) @auth(level: USER) {
+query ListSkillRatings($userId: String!)
+  @auth(
+    level: USER
+    insecureReason: "Skill self-assessments are visible to any signed-in developer — the whole point of the platform is squad-wide visibility into who knows what."
+  ) {
   skillRatings(where: { user: { id: { eq: $userId } } }) {
     skillId
     name

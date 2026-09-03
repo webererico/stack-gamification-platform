@@ -4,31 +4,39 @@
 # can never write anyone else's profile or skill rating, mirroring
 # `firestore.rules`' owner-only write rules.
 
-mutation CreateUserProfile($name: String!, $email: String!) @auth(level: USER) {
+mutation CreateUserProfile($name: String!, $email: String!)
+  @auth(
+    level: USER
+    insecureReason: "Any signed-in developer may create their own profile row on first sign-up; id defaults to auth.uid so they can only ever create their own."
+  ) {
   user_insert(data: { name: $name, email: $email })
 }
 
 # Used by Google sign-in for a brand-new account: sets name/e-mail/photo.
 mutation UpsertGoogleProfile($name: String!, $email: String!, $photoUrl: String) @auth(level: USER) {
-  user_upsert(data: { name: $name, email: $email, photoUrl: $photoUrl })
+  user_upsert(data: { id_expr: "auth.uid", name: $name, email: $email, photoUrl: $photoUrl })
 }
 
 # Used by Google sign-in for a RETURNING account: refresh photo/e-mail
 # only — never touch the name (the developer may have customized it
 # in-app) or the squad.
 mutation UpdateUserContact($email: String!, $photoUrl: String) @auth(level: USER) {
-  user_update(id: auth.uid, data: { email: $email, photoUrl: $photoUrl })
+  user_update(id_expr: "auth.uid", data: { email: $email, photoUrl: $photoUrl })
 }
 
 mutation UpdateUserName($name: String!) @auth(level: USER) {
-  user_update(id: auth.uid, data: { name: $name })
+  user_update(id_expr: "auth.uid", data: { name: $name })
 }
 
 mutation UpdateUserTotalXp($totalXp: Int!) @auth(level: USER) {
-  user_update(id: auth.uid, data: { totalXp: $totalXp })
+  user_update(id_expr: "auth.uid", data: { totalXp: $totalXp })
 }
 
-mutation CreateSquad($name: String!, $stack: String!) @auth(level: USER) {
+mutation CreateSquad($name: String!, $stack: String!)
+  @auth(
+    level: USER
+    insecureReason: "Any signed-in developer may create a new squad during onboarding."
+  ) {
   squad_insert(data: { name: $name, stack: $stack })
 }
 
@@ -36,7 +44,7 @@ mutation CreateSquad($name: String!, $stack: String!) @auth(level: USER) {
 # land in the same Postgres transaction since they're two top-level
 # mutation fields in one operation.
 mutation JoinSquad($squadId: UUID!, $newMemberCount: Int!) @auth(level: USER) {
-  user_update(id: auth.uid, data: { squad: { id: $squadId } })
+  user_update(id_expr: "auth.uid", data: { squad: { id: $squadId } })
   squad_update(id: $squadId, data: { memberCount: $newMemberCount })
 }
 

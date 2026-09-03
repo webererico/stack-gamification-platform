@@ -1,11 +1,11 @@
 specVersion: "v1"
 serviceId: "stack-up"
-location: "us-central1"
+location: "us-east4"
 schema:
   source: "schema"
   datasource:
     postgresql:
       database: "stackup"
       cloudSql:
-        instanceId: "stack-up-fdc"
+        instanceId: "stack-up-917a4-instance"
 connectorDirs: ["connector"]

@@ -1,7 +1,7 @@
 # Data Connect migration (WIP — not yet deployed)
 
-This directory is a **draft** relational schema for migrating Stack Up's
-backend off Firestore and onto [Firebase Data Connect](https://firebase.google.com/docs/data-connect)
+This directory is the relational schema for migrating Stack Up's backend
+off Firestore and onto [Firebase Data Connect](https://firebase.google.com/docs/data-connect)
 (PostgreSQL via Cloud SQL). Firebase Authentication is unaffected — this
 only replaces the three Firestore collections (`users`, `squads`,
 `users/{uid}/skills`) with relational tables.
@@ -9,53 +9,46 @@ only replaces the three Firestore collections (`users`, `squads`,
 ## Status
 
 - [x] `schema/schema.gql` — `User`, `Squad`, `SkillRating` tables
-- [x] `connector/queries.gql` / `connector/mutations.gql` — draft
-      operations covering everything `UserRepository`, `SquadRepository`
-      and `SkillRepository` currently do against Firestore
-- [ ] **Not yet compiled/validated** against the real Data Connect
-      toolkit — see below
-- [ ] Cloud SQL instance not yet provisioned
-- [ ] Dart SDK not yet generated
+- [x] `connector/queries.gql` / `connector/mutations.gql` — operations
+      covering everything `UserRepository`, `SquadRepository` and
+      `SkillRepository` currently do against Firestore
+- [x] **Compiles cleanly** against the real Data Connect toolkit
+      (`firebase dataconnect:compile`), no warnings
+- [x] Cloud SQL instance provisioned — `stack-up-917a4-instance`
+      (`us-east4`, Postgres 18) — this was auto-created when Data
+      Connect was activated in the Firebase console
+- [x] Postgres IAM users created for the Data Connect service and the
+      `dataconnect-admin` service account (`firebase dataconnect:sql:setup`
+      got this far)
+- [x] Dart SDK generated into `lib/core/dataconnect_generated/`
+      (`stack_up_connector`) — excluded from `flutter analyze` since it's
+      generated, not hand-written
+- [ ] **Blocked**: applying the schema to the live database
+      (`firebase dataconnect:sql:migrate`, and the last step of
+      `:sql:setup`) needs a direct Postgres connection through the Cloud
+      SQL Auth Proxy (raw TCP, port 3307) — this sandboxed environment's
+      network policy only proxies HTTPS, so this must be run from a
+      machine with real network access (see below)
 - [ ] `UserRepositoryImpl` / `SquadRepositoryImpl` / `SkillRepositoryImpl`
       not yet ported — the app still runs on Firestore today
 
-## Why nothing has been provisioned yet
-
-`firebase dataconnect:compile` / `:sql:setup` / `:sql:migrate` and
-`firebase deploy --only dataconnect` all need Google Cloud **Application
-Default Credentials** — a different, broader auth mechanism than the
-`firebase login:ci` token used for the rest of this project's deploys
-(hosting, Firestore). That needs a service account with the **Cloud SQL
-Admin** and **Firebase Data Connect Admin** roles.
-
-## Next steps (once credentials are available)
+## To finish provisioning (run locally, or in Cloud Shell)
 
 ```bash
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json  # the
+  # dataconnect-admin@stack-up-917a4.iam.gserviceaccount.com key, or run
+  # `gcloud auth application-default login` instead
 
-# 1. Validate the schema/connector files compile.
-firebase dataconnect:compile
-
-# 2. Provision the Cloud SQL Postgres instance (one-time; takes a few
-#    minutes and starts incurring Cloud SQL costs — this is NOT covered
-#    by Firestore's free Spark-plan tier).
+# Finishes what got interrupted: grants the DB users their schema
+# permissions. Safe to re-run — the two IAM Postgres users already exist.
 firebase dataconnect:sql:setup
 
-# 3. Apply the schema to the database.
+# Applies schema/schema.gql to the database.
 firebase dataconnect:sql:migrate
 
-# 4. Generate the typed Dart client into lib/core/dataconnect_generated/.
-firebase dataconnect:sdk:generate
-
-# 5. Deploy the schema + connector to the Data Connect service.
+# Publishes the schema + connector to the Data Connect service.
 firebase deploy --only dataconnect
 ```
-
-After step 4 generates real code, the three repository implementations
-get rewritten against it (replacing `cloud_firestore` calls) — that's
-the bulk of the remaining work, and where the schema/connector drafts
-above will likely need small fixes based on what the compiler actually
-accepts.
 
 ## Data model
 
@@ -69,7 +62,12 @@ User
 Squad
   id: UUID
   name, stack
-  memberCount: Int
+  memberCount: Int         # not atomically incremented (see JoinSquad in
+                            # connector/mutations.gql) — a known
+                            # simplification vs. the old Firestore
+                            # FieldValue.increment; fine for this app's
+                            # low write-concurrency, worth revisiting if
+                            # squads ever get large/contested
 
 SkillRating (key: user + skillId)
   user: User
@@ -81,3 +79,14 @@ SkillRating (key: user + skillId)
                            # a migration
   projectsCount: Int
 ```
+
+## Generated Dart SDK
+
+`lib/core/dataconnect_generated/` (package `stack_up_connector`) exposes
+`DefaultConnector.instance.<operationName>(...).execute()` for one-shot
+reads/writes, and, for queries, `.ref().subscribe()` which returns a real
+`Stream<QueryResult<...>>` backed by a server-side WebSocket stream —
+so the repository implementations can keep their existing
+`Stream<AppUser?>`-shaped interfaces (`UserRepository.watchUser`, etc.)
+when they get ported; only the implementation swaps from
+`cloud_firestore` to this connector.
