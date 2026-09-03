@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stack_gamification_platform/core/di/dependency_injection.dart';
+import 'package:stack_gamification_platform/core/theme/app_colors.dart';
+import 'package:stack_gamification_platform/core/theme/app_style.dart';
 import 'package:stack_gamification_platform/features/alert/cubit/alert_area_cubit.dart';
 import 'package:stack_gamification_platform/features/alert/domain/alert.dart';
 
@@ -46,34 +48,31 @@ class _AlertWidgetState extends State<AlertWidget>
     return AnimatedBuilder(
       animation: _controller,
       builder: (_, _) {
+        final color = switch (widget.alert.type) {
+          AlertType.success => AppColors.success,
+          AlertType.error => AppColors.error,
+          AlertType.warning => AppColors.warning,
+        };
         return Opacity(
           opacity: opacityAnimation.value,
           child: Container(
             decoration: BoxDecoration(
-              color: switch (widget.alert.type) {
-                AlertType.success => const Color(0xffd6f5ea),
-                AlertType.error => const Color(0xfffbdde1),
-                AlertType.warning => const Color(0xfffff1cf),
-              },
+              color: AppColors.surfaceRaised,
+              border: Border.all(color: color.withValues(alpha: 0.4)),
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Icon(
-                  switch (widget.alert.type) {
-                    AlertType.success => Icons.check_circle,
-                    AlertType.error => Icons.cancel_outlined,
-                    AlertType.warning => Icons.warning_amber_rounded,
-                  },
-                  color: switch (widget.alert.type) {
-                    AlertType.success => const Color(0xff2ecc71),
-                    AlertType.error => const Color(0xffe4536b),
-                    AlertType.warning => const Color(0xffffb020),
-                  },
-                ),
+                Icon(switch (widget.alert.type) {
+                  AlertType.success => Icons.check_circle,
+                  AlertType.error => Icons.cancel_outlined,
+                  AlertType.warning => Icons.warning_amber_rounded,
+                }, color: color),
                 const SizedBox(width: 12),
-                Expanded(child: Text(widget.alert.title)),
+                Expanded(
+                  child: Text(widget.alert.title, style: AppStyle.title14),
+                ),
               ],
             ),
           ),

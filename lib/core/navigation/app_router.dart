@@ -6,7 +6,7 @@ import 'package:stack_gamification_platform/core/navigation/auth_gate.dart';
 import 'package:stack_gamification_platform/core/navigation/routes.dart';
 import 'package:stack_gamification_platform/features/authentication/signin/presentation/pages/signin_page.dart';
 import 'package:stack_gamification_platform/features/authentication/signup/presentation/pages/signup_page.dart';
-import 'package:stack_gamification_platform/features/core/presentation/bottom_navigation_page.dart';
+import 'package:stack_gamification_platform/features/core/presentation/app_shell.dart';
 import 'package:stack_gamification_platform/features/core/presentation/splash_page.dart';
 import 'package:stack_gamification_platform/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:stack_gamification_platform/features/profile/presentation/pages/profile_page.dart';
@@ -61,7 +61,7 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state, navigationShell) {
         return _fadePage(
           state: state,
-          child: BottomNavigationPage(child: navigationShell),
+          child: AppShell(navigationShell: navigationShell),
         );
       },
       branches: [

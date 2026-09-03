@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:stack_gamification_platform/core/gamification/level_calculator.dart';
-import 'package:stack_gamification_platform/core/theme/app_colors.dart';
 import 'package:stack_gamification_platform/core/theme/app_style.dart';
 
-/// Small pill showing a developer's overall level, e.g. "🚀 Sênior".
+/// Small pill showing a developer's overall level, e.g. a colored rank dot
+/// next to "Sênior" — no emoji, matching the dev-tool visual language.
 class LevelBadge extends StatelessWidget {
   const LevelBadge({required this.level, this.compact = false, super.key});
 
@@ -18,18 +18,27 @@ class LevelBadge extends StatelessWidget {
         vertical: compact ? 4 : 6,
       ),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor.withValues(alpha: 0.12),
+        color: level.color.withValues(alpha: 0.12),
+        border: Border.all(color: level.color.withValues(alpha: 0.35)),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(level.emoji, style: TextStyle(fontSize: compact ? 12 : 14)),
-          const SizedBox(width: 4),
+          Container(
+            width: compact ? 6 : 7,
+            height: compact ? 6 : 7,
+            decoration: BoxDecoration(
+              color: level.color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
           Text(
             level.label,
             style: (compact ? AppStyle.subtitle12 : AppStyle.title14).copyWith(
-              color: AppColors.primaryColor,
+              color: level.color,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -49,7 +58,8 @@ class SkillTierChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: tier.color.withValues(alpha: 0.15),
+        color: tier.color.withValues(alpha: 0.12),
+        border: Border.all(color: tier.color.withValues(alpha: 0.35)),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(

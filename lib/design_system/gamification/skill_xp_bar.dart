@@ -34,7 +34,7 @@ class SkillXpBar extends StatelessWidget {
             Row(
               children: [
                 Expanded(child: Text(name, style: AppStyle.title14)),
-                Text('$rating/10', style: AppStyle.heading14),
+                Text('$rating/10', style: AppStyle.dataMedium),
                 if (trailing != null) ...[
                   AppSpaces.horizontal8,
                   trailing!,
@@ -58,20 +58,10 @@ class SkillXpBar extends StatelessWidget {
                 builder: (context, value, _) {
                   return Stack(
                     children: [
-                      Container(height: 10, color: AppColors.xpTrackColor),
+                      Container(height: 6, color: AppColors.xpTrackColor),
                       FractionallySizedBox(
                         widthFactor: value,
-                        child: Container(
-                          height: 10,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                tier.color.withValues(alpha: 0.75),
-                                tier.color,
-                              ],
-                            ),
-                          ),
-                        ),
+                        child: Container(height: 6, color: tier.color),
                       ),
                     ],
                   );

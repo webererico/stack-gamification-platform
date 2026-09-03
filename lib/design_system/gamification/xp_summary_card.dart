@@ -30,13 +30,10 @@ class XpSummaryCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primaryColor, Color(0xFF9B7CFF)],
-        ),
+        color: AppColors.surface,
+        border: Border.all(color: AppColors.border),
         borderRadius: AppBorder.radius16,
       ),
       child: Column(
@@ -44,17 +41,12 @@ class XpSummaryCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              UserAvatar(
-                name: name,
-                photoUrl: photoUrl,
-                radius: 20,
-                foregroundColor: Colors.white,
-              ),
+              UserAvatar(name: name, photoUrl: photoUrl, radius: 20),
               AppSpaces.horizontal12,
               Expanded(
                 child: Text(
                   name,
-                  style: AppStyle.heading20.copyWith(color: Colors.white),
+                  style: AppStyle.heading20,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -63,35 +55,21 @@ class XpSummaryCard extends StatelessWidget {
           ),
           if (subtitle != null) ...[
             AppSpaces.vertical4,
-            Text(
-              subtitle!,
-              style: AppStyle.body14.copyWith(
-                color: Colors.white.withValues(alpha: 0.85),
-              ),
-            ),
+            Text(subtitle!, style: AppStyle.body14),
           ],
-          AppSpaces.vertical20,
+          AppSpaces.vertical24,
           Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                '$totalXp XP',
-                style: AppStyle.heading16.copyWith(color: Colors.white),
-              ),
+              Text('$totalXp', style: AppStyle.dataLarge),
+              const SizedBox(width: 6),
+              Text('XP', style: AppStyle.body14),
               const Spacer(),
               if (xpToNext != null)
-                Text(
-                  'Faltam $xpToNext XP para o próximo nível',
-                  style: AppStyle.subtitle12.copyWith(
-                    color: Colors.white.withValues(alpha: 0.85),
-                  ),
-                )
+                Text('$xpToNext p/ próximo nível', style: AppStyle.dataSmall)
               else
-                Text(
-                  'Nível máximo alcançado!',
-                  style: AppStyle.subtitle12.copyWith(
-                    color: Colors.white.withValues(alpha: 0.85),
-                  ),
-                ),
+                Text('Nível máximo alcançado', style: AppStyle.dataSmall),
             ],
           ),
           AppSpaces.vertical8,
@@ -104,17 +82,12 @@ class XpSummaryCard extends StatelessWidget {
               builder: (context, value, _) {
                 return Stack(
                   children: [
-                    Container(
-                      height: 10,
-                      color: Colors.white.withValues(alpha: 0.25),
-                    ),
+                    Container(height: 6, color: AppColors.xpTrackColor),
                     FractionallySizedBox(
                       widthFactor: value,
                       child: Container(
-                        height: 10,
-                        decoration: const BoxDecoration(
-                          color: AppColors.levelGold,
-                        ),
+                        height: 6,
+                        color: AppColors.primaryColor,
                       ),
                     ),
                   ],

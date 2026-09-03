@@ -1,11 +1,11 @@
 {
-    "name": "stack_gamification_platform",
-    "short_name": "stack_gamification_platform",
+    "name": "Stack Up",
+    "short_name": "Stack Up",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0B0D10",
+    "theme_color": "#0B0D10",
+    "description": "Plataforma de gamificação de skills técnicas para squads de desenvolvimento.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

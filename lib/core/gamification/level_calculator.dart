@@ -41,12 +41,12 @@ extension DevLevelX on DevLevel {
     DevLevel.especialista => 'Especialista',
   };
 
-  String get emoji => switch (this) {
-    DevLevel.iniciante => '🌱',
-    DevLevel.aprendiz => '🔧',
-    DevLevel.pleno => '⚡',
-    DevLevel.senior => '🚀',
-    DevLevel.especialista => '👑',
+  Color get color => switch (this) {
+    DevLevel.iniciante => AppColors.tierIniciante,
+    DevLevel.aprendiz => AppColors.tierIniciante,
+    DevLevel.pleno => AppColors.tierIntermediario,
+    DevLevel.senior => AppColors.tierAvancado,
+    DevLevel.especialista => AppColors.tierExpert,
   };
 }
 

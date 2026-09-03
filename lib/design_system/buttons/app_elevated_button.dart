@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stack_gamification_platform/core/theme/app_colors.dart';
 
 class AppElevatedButton extends StatelessWidget {
   const AppElevatedButton({
@@ -24,7 +25,9 @@ class AppElevatedButton extends StatelessWidget {
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator.adaptive(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.background,
+                  ),
                   strokeWidth: 2,
                 ),
               )

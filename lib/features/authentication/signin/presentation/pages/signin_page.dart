@@ -100,10 +100,15 @@ class _StackUpLogo extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: AppColors.primaryColor,
+            color: AppColors.background,
+            border: Border.all(color: AppColors.border),
             borderRadius: AppBorder.radius16,
           ),
-          child: const Icon(Icons.bolt_rounded, color: Colors.white, size: 32),
+          child: const Icon(
+            Icons.arrow_upward_rounded,
+            color: AppColors.primaryColor,
+            size: 30,
+          ),
         ),
         AppSpaces.horizontal12,
         Text('Stack Up', style: AppStyle.heading20),

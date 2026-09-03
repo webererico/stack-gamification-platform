@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stack_gamification_platform/core/theme/app_colors.dart';
 import 'package:stack_gamification_platform/core/theme/app_style.dart';
 import 'package:stack_gamification_platform/core/theme/spaces.dart';
 import 'package:stack_gamification_platform/design_system/gamification/level_badge.dart';
@@ -53,7 +54,7 @@ class TeamMemberTile extends StatelessWidget {
                         ],
                       ],
                     ),
-                    Text('${member.totalXp} XP', style: AppStyle.subtitle12),
+                    Text('${member.totalXp} XP', style: AppStyle.dataSmall),
                   ],
                 ),
               ),
@@ -73,21 +74,22 @@ class _RankBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final medal = switch (rank) {
-      1 => '🥇',
-      2 => '🥈',
-      3 => '🥉',
-      _ => null,
+    final color = switch (rank) {
+      1 => AppColors.tierExpert,
+      2 => AppColors.mutedFontColor,
+      3 => AppColors.tierAvancado,
+      _ => AppColors.border,
     };
-    return SizedBox(
-      width: 28,
-      child: medal != null
-          ? Text(medal, style: const TextStyle(fontSize: 20))
-          : Text(
-              '$rank',
-              textAlign: TextAlign.center,
-              style: AppStyle.subtitle12,
-            ),
+    return Container(
+      width: 26,
+      height: 26,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color.withValues(alpha: 0.12),
+        border: Border.all(color: color),
+      ),
+      child: Text('$rank', style: AppStyle.dataSmall.copyWith(color: color)),
     );
   }
 }
