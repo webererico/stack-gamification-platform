@@ -1,0 +1,50 @@
+# Reads: any signed-in developer can read any profile, squad or skill
+# rating — that transparency is the whole point of the platform (mirrors
+# `firestore.rules`' `allow read: if isSignedIn()`).
+
+query GetUser($id: String!) @auth(level: USER) {
+  user(id: $id) {
+    id
+    name
+    email
+    photoUrl
+    totalXp
+    createdAt
+    squad {
+      id
+      name
+      stack
+      memberCount
+    }
+  }
+}
+
+query ListSquadMembers($squadId: UUID!) @auth(level: USER) {
+  users(where: { squad: { id: { eq: $squadId } } }, orderBy: { totalXp: DESC }) {
+    id
+    name
+    email
+    photoUrl
+    totalXp
+  }
+}
+
+query ListSquads @auth(level: USER) {
+  squads(orderBy: { name: ASC }) {
+    id
+    name
+    stack
+    memberCount
+  }
+}
+
+query ListSkillRatings($userId: String!) @auth(level: USER) {
+  skillRatings(where: { user: { id: { eq: $userId } } }) {
+    skillId
+    name
+    rating
+    answersJson
+    projectsCount
+    updatedAt
+  }
+}

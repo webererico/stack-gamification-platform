@@ -1,0 +1,40 @@
+# Stack Up — relational schema (Postgres via Firebase Data Connect).
+#
+# `User.id` defaults to the calling Firebase Auth uid, so a signed-in
+# developer can only ever create/update their own row. Everyone signed in
+# can READ any row (that transparency is the whole point of the platform);
+# every operation that can mutate a row scopes it to the caller via
+# `@auth(level: USER)` plus an `id`/`userId` default of `auth.uid` — see
+# connector/mutations.gql.
+
+type User @table {
+  id: String! @default(expr: "auth.uid")
+  name: String!
+  email: String!
+  photoUrl: String
+  totalXp: Int! @default(value: 0)
+  createdAt: Timestamp! @default(expr: "request.time")
+  squad: Squad
+}
+
+type Squad @table {
+  id: UUID! @default(expr: "uuidV4()")
+  name: String!
+  stack: String!
+  memberCount: Int! @default(value: 0)
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+# One row per (user, skill). `answersJson` holds the questionnaire answers
+# as a JSON-encoded map ({questionId: "yes" | "no" | "unknown"}) — the
+# question set lives in app code (core/gamification/skill_questions.dart),
+# not in the schema, so adding a question never needs a migration.
+type SkillRating @table(key: ["user", "skillId"]) {
+  user: User!
+  skillId: String!
+  name: String!
+  rating: Int!
+  answersJson: String!
+  projectsCount: Int! @default(value: 0)
+  updatedAt: Timestamp! @default(expr: "request.time")
+}

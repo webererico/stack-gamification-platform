@@ -1,0 +1,5 @@
+connectorId: "default"
+generate:
+  dartSdk:
+    outputDir: "../../lib/core/dataconnect_generated"
+    package: "stack_up_connector"
