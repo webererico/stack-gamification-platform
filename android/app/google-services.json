@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "30264076058",
+    "project_id": "stack-up-917a4",
+    "storage_bucket": "stack-up-917a4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30264076058:android:ac11aadf370e2b76bc6ea3",
+        "android_client_info": {
+          "package_name": "com.webererico.stack_gamification_platform"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30264076058-qvti5dj93a805drvtnndnf6gqpgts8l4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFH2q-eLeADMZIlDLH6cv3iBg9L1SfP9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30264076058-qvti5dj93a805drvtnndnf6gqpgts8l4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

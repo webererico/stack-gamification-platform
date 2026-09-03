@@ -20,50 +20,52 @@ para alocação em projetos e planos de crescimento.
   dependência, `go_router` para navegação, `fl_chart` para o radar de
   skills.
 
+## Status do projeto Firebase
+
+O app já está conectado a um projeto Firebase real (`stack-up-917a4`):
+
+- ✅ `lib/firebase_options.dart` configurado (`flutterfire configure`)
+- ✅ Firestore criado, com `firestore.rules` e `firestore.indexes.json`
+  publicados
+- ✅ Web publicado no Firebase Hosting: **https://stack-up-917a4.web.app**
+- ⚠️ **Falta habilitar o login por e-mail/senha.** Não existe comando de CLI
+  para isso — acesse [Firebase Console → Authentication → Sign-in method](https://console.firebase.google.com/project/stack-up-917a4/authentication/providers)
+  e habilite o provedor **E-mail/senha**. Sem esse passo, cadastro e login
+  falham com erro de configuração.
+- `ios/Runner/GoogleService-Info.plist` não foi gerado (este ambiente não
+  tem Xcode/macOS). Rode `flutterfire configure` novamente numa máquina Mac
+  antes de buildar para iOS — os valores em `firebase_options.dart` já estão
+  corretos para o app iOS registrado no projeto.
+
 ## Como rodar
 
 ### 1. Pré-requisitos
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (canal stable,
   testado com a 3.47.2).
-- Uma conta Firebase (gratuita) em https://console.firebase.google.com.
 
-### 2. Criar e configurar o projeto Firebase
-
-1. Crie um projeto em https://console.firebase.google.com.
-2. Em **Authentication → Sign-in method**, habilite **E-mail/senha**.
-3. Em **Firestore Database**, crie o banco (modo produção).
-4. Instale a FlutterFire CLI (uma vez): `dart pub global activate flutterfire_cli`
-5. Na raiz deste projeto, rode:
-
-   ```bash
-   flutterfire configure
-   ```
-
-   Isso **substitui** o `lib/firebase_options.dart` (que hoje contém apenas
-   placeholders) pelos valores reais do seu projeto Firebase, e gera os
-   arquivos nativos (`google-services.json` / `GoogleService-Info.plist`).
-
-6. Publique as regras de segurança e os índices do Firestore:
-
-   ```bash
-   npm install -g firebase-tools   # se ainda não tiver o firebase-tools
-   firebase login
-   firebase deploy --only firestore:rules,firestore:indexes
-   ```
-
-### 3. Rodar o app
+### 2. Rodar o app
 
 ```bash
 flutter pub get
 flutter run -d chrome   # ou -d <device-id> para Android/iOS
 ```
 
-### 4. Deploy do web app no Firebase Hosting
+### 3. Deploy do web app no Firebase Hosting
 
 ```bash
+npm install -g firebase-tools   # se ainda não tiver o firebase-tools
+firebase login
 flutter build web --release
 firebase deploy --only hosting
+```
+
+### Se precisar reconfigurar o Firebase (outro projeto, novas plataformas, etc.)
+
+```bash
+dart pub global activate flutterfire_cli
+flutterfire configure
+firebase deploy --only firestore:rules,firestore:indexes
 ```
 
 ## Modelo de dados (Firestore)

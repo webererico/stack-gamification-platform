@@ -36,28 +36,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    appId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    messagingSenderId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    projectId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    authDomain: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    storageBucket: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
+    apiKey: 'AIzaSyD7sGrOkDBH5c3mHtnPy-TRAHJJsXX58DM',
+    appId: '1:30264076058:web:d14b412c9f1a238abc6ea3',
+    messagingSenderId: '30264076058',
+    projectId: 'stack-up-917a4',
+    authDomain: 'stack-up-917a4.firebaseapp.com',
+    storageBucket: 'stack-up-917a4.firebasestorage.app',
+    measurementId: 'G-02VZW76HWS',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    appId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    messagingSenderId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    projectId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    storageBucket: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
+    apiKey: 'AIzaSyAFH2q-eLeADMZIlDLH6cv3iBg9L1SfP9o',
+    appId: '1:30264076058:android:ac11aadf370e2b76bc6ea3',
+    messagingSenderId: '30264076058',
+    projectId: 'stack-up-917a4',
+    storageBucket: 'stack-up-917a4.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    appId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    messagingSenderId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    projectId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
-    storageBucket: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE',
+    apiKey: 'AIzaSyA76TvYkzC98BJVZM4kVqeF2_-zA-Z1Ziw',
+    appId: '1:30264076058:ios:f8779d4222297277bc6ea3',
+    messagingSenderId: '30264076058',
+    projectId: 'stack-up-917a4',
+    storageBucket: 'stack-up-917a4.firebasestorage.app',
+    iosClientId: '30264076058-vp570lqnvl7fn3val3ibf113ginmh51a.apps.googleusercontent.com',
     iosBundleId: 'com.webererico.stackGamificationPlatform',
   );
 }

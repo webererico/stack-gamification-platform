@@ -12,5 +12,26 @@
         "destination": "/index.html"
       }
     ]
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "stack-up-917a4",
+          "appId": "1:30264076058:android:ac11aadf370e2b76bc6ea3",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "stack-up-917a4",
+          "configurations": {
+            "android": "1:30264076058:android:ac11aadf370e2b76bc6ea3",
+            "ios": "1:30264076058:ios:f8779d4222297277bc6ea3",
+            "web": "1:30264076058:web:d14b412c9f1a238abc6ea3"
+          }
+        }
+      }
+    }
   }
 }
