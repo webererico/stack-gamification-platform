@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Squads are visible to any signed-in teammate (so people can find and
+    // join one) and can be created by any signed-in user during onboarding.
+    match /squads/{squadId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      // Only the memberCount counter changes after creation (via joinSquad).
+      allow update: if isSignedIn() &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['memberCount']);
+      allow delete: if false;
+    }
+
+    // Every profile is readable by any signed-in teammate — that's the
+    // whole point of the platform: giving the org a clear, shared view of
+    // who knows what. Only the owner can write their own profile.
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid);
+      allow delete: if false;
+
+      // Self-assessed skill ratings: readable by anyone signed in,
+      // writable only by the developer who owns them.
+      match /skills/{skillId} {
+        allow read: if isSignedIn();
+        allow write: if isOwner(uid);
+      }
+    }
+  }
+}
